@@ -1,0 +1,112 @@
+#!/bin/bash
+# This script will query 'pkg-config' for the required cflags and ldflags.
+# If pkg-config is unavailable or does not find the library, try setting
+# INCLUDE_DIR and LIB_DIR manually via e.g:
+# R CMD INSTALL --configure-vars='INCLUDE_DIR=/.../include LIB_DIR=/.../lib'
+
+# Library settings
+PKG_CONFIG_NAME="nupic"
+PKG_DEB_NAME="capnproto"
+PKG_RPM_NAME="capnproto"
+PKG_CSW_NAME="capnproto"
+PKG_BREW_NAME="capnp"
+PKG_TEST_HEADER="<capnp/message.h>"
+PKG_LIBS="${PKG_LIBS:--lcapnp}"
+
+# Note that cflags may be empty in case of success
+if [ "$INCLUDE_DIR" ] || [ "$LIB_DIR" ]; then
+  echo "Found INCLUDE_DIR and/or LIB_DIR!"
+  PKG_CFLAGS="-I$INCLUDE_DIR $PKG_CFLAGS"
+  PKG_LIBS="-L$LIB_DIR $PKG_LIBS"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  if [ "$(command -v brew)" ]; then
+    BREWDIR=$(brew --prefix)
+    
+    if brew ls --versions $PKG_BREW_NAME > /dev/null; then
+      brew install $PKG_BREW_NAME
+    fi
+
+    PKG_CFLAGS="-I$BREWDIR/opt/$PKG_BREW_NAME/include"
+    PKG_LIBS="-L$BREWDIR/opt/$PKG_BREW_NAME/lib $PKG_LIBS"
+  else
+    curl -sfL "https://jeroen.github.io/autobrew/$PKG_BREW_NAME" > autobrew
+    source autobrew
+    rm "$BREWDIR"/lib/*.dynlib
+  fi
+  PKG_CFLAGS="-I$BREWDIR/opt/$PKG_BREW_NAME/include"
+  PKG_LIBS="-L$BREWDIR/lib $PKG_LIBS"
+fi
+
+# Find compiler
+CXXCPP=$("${R_HOME}"/bin/R CMD config CXXCPP)
+CXXFLAGS=$("${R_HOME}"/bin/R CMD config CXXFLAGS)
+CPPFLAGS=$("${R_HOME}"/bin/R CMD config CPPFLAGS)
+
+# Test
+echo "#include $PKG_TEST_HEADER" | ${CXXCPP} ${CPPFLAGS} ${PKG_CFLAGS} ${CXXFLAGS} -std=c++14 -xc++ - > /dev/null
+if [ $? -ne 0 ]; then
+  echo "------------------------- ANTICONF ERROR ---------------------------"
+  echo "Configuration failed because $PKG_CONFIG_NAME was not found. Try installing:"
+  echo " * deb: $PKG_DEB_NAME (Debian, Ubuntu, etc)"
+  echo " * rpm: $PKG_RPM_NAME (Fedora, CentOS, RHEL)"
+  echo " * csw: $PKG_CSW_NAME (Solaris)"
+  echo " * brew: $PKG_BREW_NAME (Mac OSX)"
+  echo "To use a custom $PKG_CONFIG_NAME set INCLUDE_DIR and LIB_DIR manually via:"
+  echo "R CMD INSTALL --configure-vars='INCLUDE_DIR=... LIB_DIR=...'"
+  echo "--------------------------------------------------------------------"
+  exit 1;
+fi
+
+# Write to Makevars
+sed -e "s|@PKG_CXXFLAGS@|$PKG_CFLAGS|" -e "s|@PKG_LIBS@|$PKG_LIBS|" src/Makevars.in > src/Makevars
+
+# Generate proto
+
+capnp compile -oc++ src/nupic/proto/ArrayProto.capnp
+
+capnp compile -oc++ src/nupic/proto/BitHistory.capnp
+
+capnp compile -oc++ src/nupic/proto/Segment.capnp
+
+capnp compile -oc++:src/nupic/proto -I src/ --src-prefix src/nupic/proto src/nupic/proto/Cell.capnp
+
+capnp compile -oc++ src/nupic/proto/RandomProto.capnp
+
+capnp compile -oc++ src/nupic/proto/SegmentUpdate.capnp
+
+capnp compile -oc++:src/nupic/proto -I src/ --src-prefix src/nupic/proto src/nupic/proto/Cells4.capnp
+
+capnp compile -oc++:src/nupic/proto -I src/ --src-prefix src/nupic/proto src/nupic/proto/ClaClassifier.capnp
+
+capnp compile -oc++ src/nupic/proto/ConnectionsProto.capnp
+
+capnp compile -oc++:src/nupic/proto -I src/ --src-prefix src/nupic/proto src/nupic/proto/LinkProto.capnp
+
+capnp compile -oc++ src/nupic/proto/Map.capnp
+
+capnp compile -oc++ src/nupic/proto/RegionProto.capnp
+
+capnp compile -oc++:src/nupic/proto -I src/ --src-prefix src/nupic/proto src/nupic/proto/NetworkProto.capnp
+
+capnp compile -oc++ src/nupic/proto/PyRegionProto.capnp
+
+capnp compile -oc++ src/nupic/proto/SdrClassifier.capnp
+
+capnp compile -oc++ src/nupic/proto/SparseBinaryMatrixProto.capnp
+
+capnp compile -oc++ src/nupic/proto/SparseMatrixProto.capnp
+
+capnp compile -oc++:src/nupic/proto -I src/ --src-prefix src/nupic/proto src/nupic/proto/SpatialPoolerProto.capnp
+
+capnp compile -oc++ src/nupic/proto/SvmProto.capnp
+
+capnp compile -oc++:src/nupic/proto -I src/ --src-prefix src/nupic/proto src/nupic/proto/TemporalMemoryProto.capnp
+
+capnp compile -oc++:src/nupic/proto -I src/ --src-prefix src/nupic/proto src/nupic/proto/TemporalMemoryV1.capnp
+
+capnp compile -oc++ src/nupic/proto/TestNodeProto.capnp
+
+capnp compile -oc++ src/nupic/proto/VectorFileSensorProto.capnp
+
+# Success
+exit 0
