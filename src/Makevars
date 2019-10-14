@@ -1,2 +1,2 @@
-PKG_CXXFLAGS=-I. $(CXXPICFLAGS) -I/usr/local/opt/capnp/include
+PKG_CXXFLAGS=-I. $(CXXPICFLAGS) -I/usr/local/opt/capnp/include -std=c++14
 PKG_LIBS=-L/usr/local/lib -L/usr/local/opt/capnp/lib -lcapnp

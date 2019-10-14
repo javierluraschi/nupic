@@ -58,7 +58,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Write to Makevars
-sed -e "s|@PKG_CXXFLAGS@|$PKG_CFLAGS|" -e "s|@PKG_LIBS@|$PKG_LIBS|" src/Makevars.in > src/Makevars
+sed -e "s|@PKG_CXXFLAGS@|$PKG_CFLAGS -std=c++14|" -e "s|@PKG_LIBS@|$PKG_LIBS|" src/Makevars.in > src/Makevars
 
 # Generate proto
 
