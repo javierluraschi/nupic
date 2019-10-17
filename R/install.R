@@ -5,6 +5,6 @@ nupic_deps <- function() {
 }
 
 #' @export
-install_nupic <- function() {
+nupic_install <- function() {
   reticulate::py_install(nupic_deps())
 }
