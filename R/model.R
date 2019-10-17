@@ -1,32 +1,3 @@
-metrics_manager <- function(model) {
-  metrics <- nupic$frameworks$opf$metrics
-
-  specs <- list(
-    metrics$MetricSpec(field = "consumption", metric = "multiStep",
-                       inferenceElement = "multiStepBestPredictions",
-                       params = list(errorMetric = "aae", window = 1000, steps = 1)),
-    metrics$MetricSpec(field = "consumption", metric = "trivial",
-                       inferenceElement ="prediction",
-                       params = list(errorMetric = "aae", window = 1000, steps = 1)),
-    metrics$MetricSpec(field = "consumption", metric = "multiStep",
-                       inferenceElement = "multiStepBestPredictions",
-                       params = list(errorMetric = "altMAPE", window = 1000, steps =  1)),
-    metrics$MetricSpec(field = "consumption", metric = "trivial",
-                       inferenceElement = "prediction",
-                       params = list(errorMetric = "altMAPE", window = 1000, steps = 1))
-  )
-  
-  nupic$frameworks$opf$prediction_metrics_manager$MetricsManager(
-    specs, model$getFieldInfo(), model$getInferenceType())
-}
-
-nupic_format_predictions <- function(predictions) {
-  format_tibble(data.frame(
-    step = names(model$inferences$multiStepBestPredictions),
-    prediction = unlist(model$inferences$multiStepBestPredictions)
-  ))
-}
-
 #' @export
 nupic <- function(data = gym_hourly[1:50,], params = nupic_example("hotgym")) {
   nupic <- import("nupic")
