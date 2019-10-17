@@ -88,51 +88,7 @@ HOTGYM_PARAMS = {
 
         'spEnable': True,
 
-        'spParams': {
-            # SP diagnostic output verbosity control;
-            # 0: silent; >=1: some info; >=2: more info;
-            'spVerbosity': 0,
-
-            # Spatial Pooler implementation selector.
-            # Options: 'py', 'cpp' (speed optimized, new)
-            'spatialImp': 'cpp',
-
-            'globalInhibition': 1,
-
-            # Number of cell columns in the cortical region (same number for
-            # SP and TM)
-            # (see also tpNCellsPerCol)
-            'columnCount': 2048,
-
-            'inputWidth': 0,
-
-            # SP inhibition control (absolute value);
-            # Maximum number of active columns in the SP region's output (when
-            # there are more, the weaker ones are suppressed)
-            'numActiveColumnsPerInhArea': 40,
-
-            'seed': 1956,
-
-            # potentialPct
-            # What percent of the columns's receptive field is available
-            # for potential synapses.
-            'potentialPct': 0.85,
-
-            # The default connected threshold. Any synapse whose
-            # permanence value is above the connected threshold is
-            # a "connected synapse", meaning it can contribute to the
-            # cell's firing. Typical value is 0.10.
-            'synPermConnected': 0.1,
-
-            'synPermActiveInc': 0.04,
-
-            'synPermInactiveDec': 0.005,
-
-            # boostStrength controls the strength of boosting. It should be a
-            # a number greater or equal than 0.0. No boosting is applied if
-            # boostStrength=0.0. Boosting encourages efficient usage of SP columns.
-            'boostStrength': 3.0,
-        },
+        'spParams': {},
 
         # Controls whether TM is enabled or disabled;
         # TM is necessary for making temporal predictions, such as predicting

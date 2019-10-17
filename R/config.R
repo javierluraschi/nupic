@@ -70,3 +70,53 @@ nupic_config_tm <- function(verbosity = 0,
     pamLength = as.integer(pam_length)
   )
 }
+
+#' @param verbosity SP diagnostic output verbosity control,
+#'   zero for silent.
+#' @param global_inhibition Global inhibition.
+#' @param column_count Number of cell columns in the cortical
+#'   region (same number for SP and TM).
+#' @param input_width Input width.
+#' @param num_active_columns_in_area SP inhibition control (absolute value);
+#'   Maximum number of active columns in the SP region's output (when there
+#'   are more, the weaker ones are suppressed).
+#' @param seed Integer number to use as seed.
+#' @param potential_pct What percent of the columns's receptive field is
+#'   available for potential synapses.
+#' @param syn_perm_connected The default connected threshold. Any synapse
+#'   whose permanence value is above the connected threshold is a
+#'   "connected synapse", meaning it can contribute to the cell's firing.
+#'   Typical value is 0.10.
+#' @param syn_perm_active_inc Active synapse permanence increment.
+#' @param syn_perm_inactive_dec Inactive synapse permanence decrement.
+#' @param boost_strength boostStrength controls the strength of boosting.
+#'   It should be a number greater or equal than 0.0. No boosting is applied
+#'   if it's zero, boosting encourages efficient usage of SP columns.
+#' 
+#' @export
+nupic_config_sp <- function(verbosity = 0,
+                            global_inhibition = 1,
+                            column_count = 2048,
+                            input_width = 0,
+                            num_active_columns_in_area = 40,
+                            seed = 1956,
+                            potential_pct = 0.85,
+                            syn_perm_connected = 0.1,
+                            syn_perm_active_inc = 0.04,
+                            syn_perm_inactive_dec = 0.005,
+                            boost_strength = 3.0) {
+  list(
+    spVerbosity = as.integer(verbosity),
+    spatialImp = "cpp",
+    globalInhibition = as.integer(global_inhibition),
+    columnCount = as.integer(column_count),
+    inputWidth = as.integer(input_width),
+    numActiveColumnsPerInhArea = as.integer(num_active_columns_in_area),
+    seed = as.integer(seed),
+    potentialPct = potential_pct,
+    synPermConnected = syn_perm_connected,
+    synPermActiveInc = syn_perm_active_inc,
+    synPermInactiveDec = syn_perm_inactive_dec,
+    boostStrength = boost_strength
+  )
+}

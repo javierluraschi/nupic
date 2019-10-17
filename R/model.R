@@ -1,15 +1,18 @@
 #' @param data The data frame to use for online prediction.
 #' @param tm The TM configuration, use \code{nupic_config_tm()}.
+#' @param sp The SP configuration, use \code{nupic_config_sp()}.
 #' @param params Configutation dictionary.
 #' 
 #' @export
 nupic <- function(data = gym_hourly[1:50,],
                   tm = nupic_config_tm(),
+                  sp = nupic_config_sp(),
                   params = nupic_example("hotgym")) {
   
   nupic <- import("nupic")
   
   params$modelParams$tmParams <- tm
+  params$modelParams$spParams <- sp
   model <- nupic$frameworks$opf$model_factory$ModelFactory$create(params)
   
   model$enableInference(list(predictedField = "consumption"))
