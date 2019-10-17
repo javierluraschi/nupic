@@ -1,0 +1,56 @@
+---
+title: "nupic: Platform for Intelligent Computing"
+output:
+  github_document:
+    fig_width: 8
+    fig_height: 4
+---
+
+```{r, echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(
+  warning = FALSE,
+  fig.path = "tools/readme/", 
+  dev = "png",
+  dpi = 96,
+  comment = "#>",
+  collapse = TRUE
+)
+
+ggplot2::theme_set(ggplot2::theme_light())
+```
+
+This R packages provides an interface to the Numenta Platform for Intelligent Computing **(NuPIC)**, a machine intelligence platform that implements the [HTM learning algorithms](https://numenta.com/resources/papers-videos-and-more/). HTM is a detailed computational theory of the neocortex. At the core of HTM are time-based continuous learning algorithms that store and recall spatial and temporal patterns. NuPIC is suited to a variety of problems, particularly anomaly detection and prediction of streaming data sources. For more information, see [numenta.org](http://numenta.org/), the [NuPIC Forum](https://discourse.numenta.org/c/nupic) and [documentation](http://nupic.docs.numenta.org/).
+
+## Installation 
+
+First, install the latest GitHub version:
+
+```{r, eval = FALSE}
+remotes::install_github("javierluraschi/nupic")
+```
+
+Followed by installing the Nupic runtime:
+
+```{r setup}
+nupic::nupic_install()
+```
+
+**Note**: Nupic requires Python to be installed in your system.
+
+## Usage
+
+```{r}
+library(nupic)
+
+nupic(
+  gym_hourly[1:10,],
+  predict = "consumption",
+  encoders = nupic_config_en(
+    encoder_random_distributed_scalar("consumption", resolution = 0.88, seed = 1),
+    encoder_date("timestamp", "time_of_day", time_of_day = list(21L, 1L)),
+    encoder_date("timestamp", "weekend", weekend = 21L)
+  )
+)
+```
+
+
