@@ -25,19 +25,6 @@ HOTGYM_PARAMS = {
     # Version that specifies the format of the config.
     'version': 1,
 
-    # Intermediate variables used to compute fields in modelParams and also
-    # referenced from the control section.
-    'aggregationInfo': {   'days': 0,
-        'fields': [('consumption', 'sum')],
-        'hours': 1,
-        'microseconds': 0,
-        'milliseconds': 0,
-        'minutes': 0,
-        'months': 0,
-        'seconds': 0,
-        'weeks': 0,
-        'years': 0},
-
     'predictAheadTime': None,
 
     # Model parameter dictionary.
