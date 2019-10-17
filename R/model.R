@@ -6,11 +6,15 @@
 #' 
 #' @export
 nupic <- function(data = gym_hourly[1:50,],
+                  encoders = nupic_encoders(
+                    encoder_random_distributed_scalar("consumption", resolution = 0.88),
+                    encoder_date("timestamp", "timestamp_timeOfDay", time_of_day = list(21L, 1L)),
+                    encoder_date("timestamp", "timestamp_weekend", weekend = 21L)
+                  ),
                   tm = nupic_config_tm(),
                   sp = nupic_config_sp(),
                   cl = nupic_config_cl(),
-                  se = nupic_confif_se(),
-                  encoders = nupic_example("hotgym")) {
+                  se = nupic_confif_se()) {
   
   nupic <- import("nupic")
   
@@ -30,7 +34,7 @@ nupic <- function(data = gym_hourly[1:50,],
     )
   )
   
-  params$modelParams$sensorParams$encoders <- encoders$modelParams$sensorParams$encoders
+  params$modelParams$sensorParams$encoders <- encoders
   
   model <- nupic$frameworks$opf$model_factory$ModelFactory$create(params)
   
