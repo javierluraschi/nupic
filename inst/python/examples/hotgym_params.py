@@ -19,19 +19,7 @@
 # ----------------------------------------------------------------------
 
 HOTGYM_PARAMS = {
-    # Type of model that the rest of these parameters apply to.
-    'model': "HTMPrediction",
-
-    # Version that specifies the format of the config.
-    'version': 1,
-
-    'predictAheadTime': None,
-
-    # Model parameter dictionary.
     'modelParams': {
-        # The type of inference that this model will perform
-        'inferenceType': 'TemporalMultiStep',
-
         'sensorParams': {
             # Sensor diagnostic output verbosity control;
             # if > 0: sensor region will print out on screen what it's sensing
@@ -71,22 +59,6 @@ HOTGYM_PARAMS = {
             #
             # (value generated from SENSOR_AUTO_RESET)
             'sensorAutoReset': None,
-        },
-
-        'spEnable': True,
-
-        'spParams': {},
-
-        # Controls whether TM is enabled or disabled;
-        # TM is necessary for making temporal predictions, such as predicting
-        # the next inputs.  Without TM, the model is only capable of
-        # reconstructing missing sensor inputs (via SP).
-        'tmEnable' : True,
-
-        'tmParams': {},
-
-        'clParams': {},
-
-        'trainSPNetOnlyIfRequested': False,
+        }
     },
 }
