@@ -1,28 +1,3 @@
-#' Define Encoders
-#' 
-#' @param ... One or many encoders.
-#' 
-#' @seealso \code{\link{encoder_random_distributed_scalar}},
-#'          \code{\link{encoder_date}}.
-#'          
-#' @export
-nupic_encoders <- function(...) {
-  dictionary <- list()
-  
-  encoders <- list(...)
-  for (encoder in encoders) {
-    dictionary[[encoder$name]] <- encoder
-    
-    for (field in names(encoder)) {
-      if (is.null(encoder[[field]])) {
-        dictionary[[encoder$name]][[field]] <- NULL
-      }
-    }
-  }
-  
-  dictionary
-}
-
 #' Random Distributed Scalar Encoder
 #' 
 #' A scalar encoder encodes a numeric (floating point) value into an array

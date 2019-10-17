@@ -1,3 +1,28 @@
+#' Encoders Configuration
+#' 
+#' @param ... One or many encoders.
+#' 
+#' @seealso \code{\link{encoder_random_distributed_scalar}},
+#'          \code{\link{encoder_date}}.
+#'          
+#' @export
+nupic_config_en <- function(...) {
+  dictionary <- list()
+  
+  encoders <- list(...)
+  for (encoder in encoders) {
+    dictionary[[encoder$name]] <- encoder
+    
+    for (field in names(encoder)) {
+      if (is.null(encoder[[field]])) {
+        dictionary[[encoder$name]][[field]] <- NULL
+      }
+    }
+  }
+  
+  dictionary
+}
+
 #' Temporal Model Configuration
 #' 
 #' @param verbosity Diagnostic output verbosity control. Zero as silent,
