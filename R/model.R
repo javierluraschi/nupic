@@ -21,12 +21,24 @@ metrics_manager <- function(model) {
 }
 
 #' @export
-nupic <- function(params = nupic_example("hotgym")) {
+nupic <- function(data = gym_hourly, params = nupic_example("hotgym")) {
   nupic <- import("nupic")
   
   model <- nupic$frameworks$opf$model_factory$ModelFactory$create(params)
   
   model$enableInference(list(predictedField = "consumption"))
   
-  model
+  py_datetime <- import("datetime")
+  py_to_date <- py_datetime$datetime$strptime
+  
+  conversions <- list()
+  for (name in colnames(data)) {
+    if ("POSIXct" %in% class(data[[name]])) {
+      data[[name]] <- format(data[[name]], "%m/%d/%y %H:%M")
+      conversions[[name]] <- "datetime"
+    }
+  }
+  
+  py_utils <- py_import("utils")
+  py_utils$model_utils$run(model, as.list(data[1,]), conversions)
 }
