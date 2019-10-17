@@ -5,4 +5,4 @@ def run(model, record, conversions):
     if (conversions[conversion] == "datetime"):
       record[conversion] = datetime.datetime.strptime(record[conversion], "%m/%d/%y %H:%M")
       
-  model.run(record)
+  return model.run(record)

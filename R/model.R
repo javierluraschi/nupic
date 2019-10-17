@@ -20,8 +20,15 @@ metrics_manager <- function(model) {
     specs, model$getFieldInfo(), model$getInferenceType())
 }
 
+nupic_format_predictions <- function(predictions) {
+  format_tibble(data.frame(
+    step = names(model$inferences$multiStepBestPredictions),
+    prediction = unlist(model$inferences$multiStepBestPredictions)
+  ))
+}
+
 #' @export
-nupic <- function(data = gym_hourly, params = nupic_example("hotgym")) {
+nupic <- function(data = gym_hourly[1:50,], params = nupic_example("hotgym")) {
   nupic <- import("nupic")
   
   model <- nupic$frameworks$opf$model_factory$ModelFactory$create(params)
@@ -40,5 +47,27 @@ nupic <- function(data = gym_hourly, params = nupic_example("hotgym")) {
   }
   
   py_utils <- py_import("utils")
-  py_utils$model_utils$run(model, as.list(data[1,]), conversions)
+  
+  predictions <- list()
+  
+  for (i in 1:nrow(data)) {
+    result <- py_utils$model_utils$run(model, as.list(data[i,]), conversions)
+    
+    pred_values <- result$inferences$multiStepBestPredictions
+    pred_steps <- names(pred_values)
+    
+    if (length(predictions) == 0)
+      for (step in pred_steps) predictions[[step]] <- 0
+    
+    for (step in pred_steps) {
+      predictions[[step]] <- c(
+        predictions[[step]],
+        result$inferences$multiStepBestPredictions[[step]]
+      )
+    }
+  }
+  
+  data$prediction <- predictions[[1]][1:length(predictions[[1]])-1]
+    
+  data
 }
