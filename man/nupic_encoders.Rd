@@ -6,6 +6,9 @@
 \usage{
 nupic_encoders(...)
 }
+\arguments{
+\item{...}{One or many encoders.}
+}
 \description{
 Define Encoders
 }

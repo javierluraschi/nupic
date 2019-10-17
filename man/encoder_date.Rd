@@ -4,20 +4,42 @@
 \alias{encoder_date}
 \title{Date Encoder}
 \usage{
-encoder_date(column, name = column, time_of_day = NULL,
-  weekend = NULL)
+encoder_date(column, name = column, season = 0, day_of_week = 0,
+  weekend = 0, holiday = 0, time_of_day = 0, custom_days = 0,
+  holidays = NULL)
 }
 \arguments{
 \item{column}{Column name to use as input.}
 
 \item{name}{The name for this encoder, defaults to \code{column}.}
 
-\item{time_of_day}{TODO}
+\item{season}{Season of the year, units in days, default radious is 91.5.
+Can specify a tuple defining a season and radius.}
 
-\item{weekend}{TODO}
+\item{day_of_week}{Day of week, where monday is zero, units in days.
+Can specify a tuple defining a day_of_week and radius.}
+
+\item{weekend}{Is a weekend or not. A block of bits either 0s or 1s.}
+
+\item{holiday}{Is a holiday or not, zero or one.}
+
+\item{time_of_day}{Time of day, where midnight equals 0, units in hours.
+Can specify a tuple defining a time_of_day and radius.}
+
+\item{custom_days}{A tuople to custom encode specific days of the week.
+Second parameter is either a string representing a day of the week like
+\code{"Monday"} or \code{"mon"}, or a list of these strings.}
+
+\item{holidays}{A list of tuples for holidays. Each holiday is either
+(month, day) or (year, month, day). The former will use the same month
+day every year eg: (12, 25) for Christmas. The latter will be a one off
+holiday eg: (2018, 4, 1) for Easter Sunday 2018.}
 }
 \description{
-Date Encoder
+A date encoder encodes a date according to encoding parameters specified in
+its constructor. The input to a date encoder is a datetime.datetime object.
+The output is the concatenation of several sub-encodings, each of which
+encodes a different aspect of the date.
 }
 \seealso{
 \code{\link{nupic_encoders}}.

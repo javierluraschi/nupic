@@ -4,17 +4,76 @@
 \alias{encoder_random_distributed_scalar}
 \title{Random Distributed Scalar Encoder}
 \usage{
-encoder_random_distributed_scalar(column, name = column, resolution)
+encoder_random_distributed_scalar(column, name = column, resolution,
+  w = 21, n = 400, offset = NULL, seed = 42, verbosity = 0)
 }
 \arguments{
 \item{column}{Column name to use as input.}
 
 \item{name}{The name for this encoder, defaults to \code{column}.}
 
-\item{resolution}{TODO}
+\item{resolution}{A floating point positive number denoting the resolution
+of the output representation. Numbers within
+\code{c(offset-resolution/2, offset+resolution/2)} will fall into
+the same bucket and thus have an identical representation.
+Adjacent buckets will differ in one bit. resolution is a
+required parameter.}
+
+\item{w}{Number of bits to set in output. w must be odd to avoid centering
+problems.  w must be large enough that spatial pooler
+columns will have a sufficiently large overlap to avoid
+false matches. A value of \code{w=21} is typical.}
+
+\item{n}{Number of bits in the representation (must be biggere than w).
+\code{n} must be large enough such that there is enough room to select
+new representations as the range grows. With \code{w=21} a value
+of \code{n=400} is typical. The class enforces \code{n > 6*w}.}
+
+\item{offset}{A floating point offset used to map scalar inputs to bucket
+indices. The middle bucket will correspond to numbers in the
+range \code{[offset - resolution/2, offset + resolution/2)}. If set
+to None, the very first input that is encoded will be used
+to determine the offset.}
+
+\item{seed}{The seed used for numpy's random number generator. If set to \code{-1}
+the generator will be initialized without a fixed seed.}
+
+\item{verbosity}{An integer controlling the level of debugging output. A
+value of zero implies no output. \code{verbosity=1} may lead to
+one-time printouts during construction, serialization or
+deserialization. \code{verbosity=2} may lead to some output per
+encode operation. \code{verbosity>2} may lead to significantly
+more output.}
 }
 \description{
-Random Distributed Scalar Encoder
+A scalar encoder encodes a numeric (floating point) value into an array
+of bits.
+}
+\details{
+This function maps a scalar value into a random distributed representation that
+is suitable as scalar input into the spatial pooler. The encoding scheme is
+designed to replace a simple ScalarEncoder. It preserves the important
+properties around overlapping representations. Unlike ScalarEncoder the min
+and max range can be dynamically increased without any negative effects. The
+only required parameter is resolution, which determines the resolution of
+input values.
+
+Scalar values are mapped to a bucket. The class maintains a random distributed
+encoding for each bucket. The following properties are maintained by this encoder:
+
+1. Similar scalars should have high overlap. Overlap should decrease smoothly
+   as scalars become less similar. Specifically, neighboring bucket indices must
+   overlap by a linearly decreasing number of bits.
+
+2. Dissimilar scalars should have very low overlap so that the SP does not
+   confuse representations. Specifically, buckets that are more than w indices
+   apart should have at most maxOverlap bits of overlap. We arbitrarily (and
+   safely) define "very low" to be 2 bits of overlap or lower.
+
+3. The representation for a scalar must not change during the lifetime of
+   the object. Specifically, as new buckets are created and the min/max range
+   is extended, the representation for previously in-range sscalars and
+   previously created buckets must not change.
 }
 \seealso{
 \code{\link{nupic_encoders}}.

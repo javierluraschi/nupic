@@ -7,7 +7,7 @@
 #' @export
 nupic <- function(data = gym_hourly[1:50,],
                   encoders = nupic_encoders(
-                    encoder_random_distributed_scalar("consumption", resolution = 0.88),
+                    encoder_random_distributed_scalar("consumption", resolution = 0.88, seed = 1),
                     encoder_date("timestamp", "timestamp_timeOfDay", time_of_day = list(21L, 1L)),
                     encoder_date("timestamp", "timestamp_weekend", weekend = 21L)
                   ),
