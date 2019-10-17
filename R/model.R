@@ -1,6 +1,7 @@
 #' @param data The data frame to use for online prediction.
 #' @param tm The TM configuration, use \code{nupic_config_tm()}.
 #' @param sp The SP configuration, use \code{nupic_config_sp()}.
+#' @param se The SE configuration, use \code{nupic_config_se()}.
 #' @param encoders Configutation dictionary.
 #' 
 #' @export
@@ -8,6 +9,7 @@ nupic <- function(data = gym_hourly[1:50,],
                   tm = nupic_config_tm(),
                   sp = nupic_config_sp(),
                   cl = nupic_config_cl(),
+                  se = nupic_confif_se(),
                   encoders = nupic_example("hotgym")) {
   
   nupic <- import("nupic")
@@ -18,11 +20,7 @@ nupic <- function(data = gym_hourly[1:50,],
     predictAheadTime = NULL,
     modelParams = list(
       inferenceType = "TemporalMultiStep",
-      sensorParams = list(
-        verbosity = as.integer(0),
-        sensorAutoReset = NULL,
-        encoders = encoders$modelParams$sensorParams$encoders
-      ),
+      sensorParams = se,
       spEnable = TRUE,
       spParams = sp,
       tmEnable = TRUE,
@@ -31,6 +29,8 @@ nupic <- function(data = gym_hourly[1:50,],
       trainSPNetOnlyIfRequested = FALSE
     )
   )
+  
+  params$modelParams$sensorParams$encoders <- encoders$modelParams$sensorParams$encoders
   
   model <- nupic$frameworks$opf$model_factory$ModelFactory$create(params)
   

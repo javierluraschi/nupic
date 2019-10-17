@@ -21,12 +21,6 @@
 HOTGYM_PARAMS = {
     'modelParams': {
         'sensorParams': {
-            # Sensor diagnostic output verbosity control;
-            # if > 0: sensor region will print out on screen what it's sensing
-            # at each step 0: silent; >=1: some info; >=2: more info;
-            # >=3: even more info (see compute() in py/regions/RecordSensor.py)
-            'verbosity' : 0,
-
             # Include the encoders we use
             'encoders': {
                 u'consumption':    {
@@ -45,20 +39,7 @@ HOTGYM_PARAMS = {
                                          'name': u'timestamp_weekend',
                                          'type': 'DateEncoder',
                                          'weekend': 21}
-            },
-
-            # A dictionary specifying the period for automatically-generated
-            # resets from a RecordSensor;
-            #
-            # None = disable automatically-generated resets (also disabled if
-            # all of the specified values evaluate to 0).
-            # Valid keys is the desired combination of the following:
-            #   days, hours, minutes, seconds, milliseconds, microseconds, weeks
-            #
-            # Example for 1.5 days: sensorAutoReset = dict(days=1,hours=12),
-            #
-            # (value generated from SENSOR_AUTO_RESET)
-            'sensorAutoReset': None,
+            }
         }
     },
 }

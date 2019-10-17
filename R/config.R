@@ -146,3 +146,27 @@ nupic_config_cl <- function(verbosity = 0,
     implementation = "cpp"
   )
 }
+
+#' Sensors Configuration
+#' 
+#' @param verbosity Diagnostic output verbosity control. Zero as silent,
+#'   \code{1:6} increasing levels of verbosity.
+#' @param sensor_auto_reset A list specifying the period for
+#'   automatically-generated resets from a RecordSensor. \code{NULL}
+#'   disable automatically-generated resets (also disabled if 
+#'   all of the specified values evaluate to 0). Valid keys is the desired
+#'   combination of the following: days, hours, minutes, seconds,
+#'   milliseconds, microseconds, weeks.
+#'
+#' @examples
+#' 
+#' nupic_config_se(sensor_auto_reset = list(days = 1L, hours = 12L))
+#'   
+#' @export
+nupic_confif_se <- function(verbosity = 0,
+                            sensor_auto_reset = NULL) {
+  list(
+    verbosity = as.integer(verbosity),
+    sensorAutoReset = sensor_auto_reset
+  )
+}
