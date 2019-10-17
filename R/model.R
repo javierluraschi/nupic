@@ -7,12 +7,14 @@
 nupic <- function(data = gym_hourly[1:50,],
                   tm = nupic_config_tm(),
                   sp = nupic_config_sp(),
+                  cl = nupic_config_cl(),
                   params = nupic_example("hotgym")) {
   
   nupic <- import("nupic")
   
   params$modelParams$tmParams <- tm
   params$modelParams$spParams <- sp
+  params$modelParams$clParams <- cl
   model <- nupic$frameworks$opf$model_factory$ModelFactory$create(params)
   
   model$enableInference(list(predictedField = "consumption"))

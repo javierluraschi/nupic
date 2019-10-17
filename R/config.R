@@ -1,3 +1,5 @@
+#' Temporal Model Configuration
+#' 
 #' @param verbosity Diagnostic output verbosity control. Zero as silent,
 #'   \code{1:6} increasing levels of verbosity.
 #' @param column_count Number of cell columns in the cortical region
@@ -71,6 +73,8 @@ nupic_config_tm <- function(verbosity = 0,
   )
 }
 
+#' Spatial Pooler Configuration
+#' 
 #' @param verbosity SP diagnostic output verbosity control,
 #'   zero for silent.
 #' @param global_inhibition Global inhibition.
@@ -118,5 +122,27 @@ nupic_config_sp <- function(verbosity = 0,
     synPermActiveInc = syn_perm_active_inc,
     synPermInactiveDec = syn_perm_inactive_dec,
     boostStrength = boost_strength
+  )
+}
+
+#' Cortical Learning Configuration
+#' 
+#' @param verbosity Diagnostic output verbosity control. Zero as silent,
+#'   \code{1:6} increasing levels of verbosity.
+#' @param alpha This controls how fast the classifier learns/forgets. Higher
+#'   values make it adapt faster and forget older patterns faster.
+#' @param steps This is set after the call to updateConfigFromSubConfig and is
+#'   computed from the aggregationInfo and predictAheadTime.
+#' 
+#' @export
+nupic_config_cl <- function(verbosity = 0,
+                            alpha = 0.1,
+                            steps = c(1, 5)) {
+  list(
+    regionName = "SDRClassifierRegion",
+    verbosity = as.integer(verbosity),
+    alpha = alpha,
+    steps = paste(steps, collapse = ","),
+    implementation = "cpp"
   )
 }
