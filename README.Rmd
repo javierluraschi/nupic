@@ -31,7 +31,7 @@ remotes::install_github("javierluraschi/nupic")
 
 Followed by installing the Nupic runtime:
 
-```{r setup}
+```{r setup, eval = FALSE}
 nupic::nupic_install()
 ```
 

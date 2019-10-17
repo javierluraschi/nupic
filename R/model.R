@@ -11,6 +11,7 @@
 #' @param sp The SP configuration, use \code{nupic_config_sp()}.
 #' @param se The SE configuration, use \code{nupic_config_se()}.
 #' 
+#' @import reticulate
 #' @export
 nupic <- function(data = gym_hourly[1:50,],
                   predict = "consumption",
