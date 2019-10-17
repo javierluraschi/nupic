@@ -2,6 +2,7 @@
 
 export(encoder_date)
 export(encoder_random_distributed_scalar)
+export(encoder_sdr_category)
 export(nupic)
 export(nupic_confif_se)
 export(nupic_config_cl)

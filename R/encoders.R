@@ -135,3 +135,39 @@ encoder_date <- function(column,
     holidays = holidays
   )
 }
+
+#' SDR Category Encoder
+#' 
+#' Encodes a list of discrete categories (described by strings), that aren't
+#' related to each other. Each encoding is an SDR in which \code{w} out of
+#' \code{n} bits are turned on.
+#' 
+#' @param column Column name to use as input.
+#' @param name The name for this encoder, defaults to \code{column}.
+#' @param n The number of bits to use.
+#' @param w The width of the SDR.
+#' @param category_list List of discrete string categories, if \code{NULL} 
+#'   then categories will be added automatically as they are encountered.
+#' @param verbosity An integer controlling the level of debugging output. A
+#'   value of zero implies no output.
+#' @param seed The seed used for numpy's random number generator.
+#'   
+#' @export
+encoder_sdr_category <- function(column,
+                                 name = column,
+                                 n,
+                                 w,
+                                 category_list = NULL,
+                                 verbosity = 0,
+                                 seed = 1) {
+  list(
+    fieldname = column,
+    name = name,
+    type = "SDRCategoryEncoder",
+    n = as.integer(n),
+    w = as.integer(w),
+    categoryList = category_list,
+    verbosity = as.integer(verbosity),
+    encoderSeed = seed
+  )
+}
